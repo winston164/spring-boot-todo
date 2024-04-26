@@ -7,6 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
@@ -32,19 +34,33 @@ class MainControllerTest {
   }
 
   private String url(){
-    return "http://localhost:" + port + "/";
+    return "http://localhost:" + port;
+  }
+
+  @Test
+  void getManyWithoutData(){
+    // Prepare 
+    assertThat(restTemplate).isNotNull();
+
+    // Test
+    TodoTicket[] tickets = restTemplate.getForObject(url() + "/todos", TodoTicket[].class);
+
+    // Assert
+    assertThat(tickets.length).isZero();
+
   }
 
   @Test
   void getWithoutData(){
     // Prepare 
     assertThat(restTemplate).isNotNull();
+    String path = "/todos/1";
 
     // Test
-    TodoTicket[] tickets = restTemplate.getForObject(url() + "todos", TodoTicket[].class);
+    ResponseEntity<String> ticketResponse = restTemplate.getForEntity(url() + path, String.class);
 
     // Assert
-    assertThat(tickets.length).isZero();
-
+    assertThat(ticketResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    assertThat(ticketResponse.getBody()).isEqualTo("Todo with id 1 couldn't be found");
   }
 }
