@@ -23,4 +23,9 @@ public class TodoTicketServiceImpl implements TodoTicketService {
   public TodoTicket readOne(int id){
     return ticketDAO.findOne(id);
   }
+
+  @Override
+  public boolean create(TodoTicket ticket){
+    return ticketDAO.save(ticket);
+  }
 }
