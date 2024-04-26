@@ -12,4 +12,6 @@ public interface TodoTicketService {
 
   public boolean create(TodoTicket ticket);
 
+  public boolean update(int id, TodoTicket ticket);
+
 }

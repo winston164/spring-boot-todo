@@ -65,4 +65,15 @@ public class TodoTicketDAOImpl implements TodoTicketDAO {
 
     return id > 0;
   }
+
+  @Override
+  public boolean updateOne(int id, TodoTicket ticket){
+    return jdbcTemplate.update(
+      "UPDATE todo_tickets set title = ?, description = ?, status = ? where id = ?",
+      ticket.getTitle(),
+      ticket.getDescription(),
+      ticket.getStatus().ordinal(),
+      id
+    ) > 0;
+  }
 }

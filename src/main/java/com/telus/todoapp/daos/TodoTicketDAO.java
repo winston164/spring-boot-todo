@@ -11,4 +11,6 @@ public interface TodoTicketDAO {
   public TodoTicket findOne(int id);
 
   public boolean save(TodoTicket ticket);
+
+  public boolean updateOne(int id, TodoTicket ticket);
 }

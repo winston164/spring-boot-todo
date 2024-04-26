@@ -28,4 +28,21 @@ public class TodoTicketServiceImpl implements TodoTicketService {
   public boolean create(TodoTicket ticket){
     return ticketDAO.save(ticket);
   }
+
+  @Override
+  public boolean update(int id, TodoTicket ticket){
+
+    TodoTicket oldTicket = ticketDAO.findOne(id);
+    if (ticket.getTitle() == null){
+      ticket.setTitle(oldTicket.getTitle());
+    }
+    if (ticket.getDescription() == null){
+      ticket.setDescription(oldTicket.getDescription());
+    }
+    if (ticket.getStatus() == null){
+      ticket.setStatus(oldTicket.getStatus());
+    }
+
+    return ticketDAO.updateOne(id, ticket);
+  }
 }
