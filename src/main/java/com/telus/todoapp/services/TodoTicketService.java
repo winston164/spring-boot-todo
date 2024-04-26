@@ -14,4 +14,5 @@ public interface TodoTicketService {
 
   public boolean update(int id, TodoTicket ticket);
 
+  public boolean delete(int id);
 }

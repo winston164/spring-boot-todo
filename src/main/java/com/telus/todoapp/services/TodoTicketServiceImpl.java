@@ -45,4 +45,9 @@ public class TodoTicketServiceImpl implements TodoTicketService {
 
     return ticketDAO.updateOne(id, ticket);
   }
+
+  @Override
+  public boolean delete(int id){
+    return ticketDAO.deleteOne(id);
+  }
 }

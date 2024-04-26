@@ -13,4 +13,6 @@ public interface TodoTicketDAO {
   public boolean save(TodoTicket ticket);
 
   public boolean updateOne(int id, TodoTicket ticket);
+
+  public boolean deleteOne(int id);
 }

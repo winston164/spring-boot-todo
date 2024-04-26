@@ -76,4 +76,12 @@ public class TodoTicketDAOImpl implements TodoTicketDAO {
       id
     ) > 0;
   }
+
+  @Override
+  public boolean deleteOne(int id){
+    return jdbcTemplate.update(
+      "DELETE FROM todo_tickets WHERE id = ?",
+      id
+    ) > 0;
+  }
 }
