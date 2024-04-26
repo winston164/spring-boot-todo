@@ -61,6 +61,57 @@ class MainControllerTest {
 
     // Assert
     assertThat(ticketResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-    assertThat(ticketResponse.getBody()).isEqualTo("Todo with id 1 couldn't be found");
+    assertThat(ticketResponse.getBody()).isEqualTo("Todo with id 1 couldn't be found.");
+  }
+
+  @Test
+  void postPayloadWithId(){
+    // Prepare 
+    assertThat(restTemplate).isNotNull();
+    String path = "/todos";
+
+    TodoTicket testTicket = new TodoTicket();
+    testTicket.setId(1);
+
+    // Test
+    ResponseEntity<String> ticketResponse = restTemplate.postForEntity(url() + path, testTicket, String.class);
+
+    // Assert
+    assertThat(ticketResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    assertThat(ticketResponse.getBody()).isEqualTo("To create a Todo entity do not set the id field in the request payload.");
+  }
+
+  @Test
+  void postPayloadWithoutTitle(){
+    // Prepare 
+    assertThat(restTemplate).isNotNull();
+    String path = "/todos";
+
+    TodoTicket testTicket = new TodoTicket();
+
+    // Test
+    ResponseEntity<String> ticketResponse = restTemplate.postForEntity(url() + path, testTicket, String.class);
+
+    // Assert
+    assertThat(ticketResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    assertThat(ticketResponse.getBody()).isEqualTo("A title is required for a Todo entity.");
+  }
+
+
+  @Test
+  void postPayloadWithLongTitle(){
+    // Prepare 
+    assertThat(restTemplate).isNotNull();
+    String path = "/todos";
+
+    TodoTicket testTicket = new TodoTicket();
+    testTicket.setTitle("c".repeat(256));
+
+    // Test
+    ResponseEntity<String> ticketResponse = restTemplate.postForEntity(url() + path, testTicket, String.class);
+
+    // Assert
+    assertThat(ticketResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    assertThat(ticketResponse.getBody()).isEqualTo("A title should be less than 255 characters for a Todo entity.");
   }
 }

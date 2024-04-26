@@ -45,7 +45,7 @@ public class MainController {
     try{
       return ticketService.readOne(ticketId);
     } catch (EmptyResultDataAccessException emptyResult){
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Todo with id " + ticketId + " couldn't be found");
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Todo with id " + ticketId + " couldn't be found.");
     }
   }
 
@@ -57,8 +57,23 @@ public class MainController {
       ticket.getTitle() != null &&
       ticket.getTitle().length() < 255
     ;
-    if (!canPost){
-      return new TodoTicket();
+    if (ticket.getId() != 0){
+      throw new ResponseStatusException(
+        HttpStatus.BAD_REQUEST,
+        "To create a Todo entity do not set the id field in the request payload."
+      );
+    }
+    if (ticket.getTitle() == null){
+      throw new ResponseStatusException(
+        HttpStatus.BAD_REQUEST,
+        "A title is required for a Todo entity."
+      );
+    }
+    if (ticket.getTitle().length() > 255){
+      throw new ResponseStatusException(
+        HttpStatus.BAD_REQUEST,
+        "A title should be less than 255 characters for a Todo entity."
+      );
     }
 
 
