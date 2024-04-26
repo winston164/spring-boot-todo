@@ -135,4 +135,31 @@ class MainControllerTest {
     assertThat(responseTicket.getDescription()).isEqualTo(testTicket.getDescription());
     assertThat(responseTicket.getStatus()).isEqualTo(TodoTicket.TodoTicketStatus.BACKLOG);
   }
+
+  @Test
+  void persistPayload(){
+    // Prepare 
+    assertThat(restTemplate).isNotNull();
+    String path = "/todos";
+
+    TodoTicket testTicket = new TodoTicket();
+    testTicket.setTitle("title");
+    ResponseEntity<TodoTicket> response = restTemplate.postForEntity(url() + path, testTicket, TodoTicket.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    // Test
+    ResponseEntity<TodoTicket> ticketResponse = restTemplate.getForEntity(
+      url() + path + "/" + response.getBody().getId(), 
+      TodoTicket.class
+    );
+
+
+    // Assert
+    assertThat(ticketResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    TodoTicket responseTicket = ticketResponse.getBody();
+    assertThat(responseTicket.getTitle()).isEqualTo(testTicket.getTitle());
+    assertThat(responseTicket.getId()).isEqualTo(1);
+    assertThat(responseTicket.getDescription()).isEqualTo(testTicket.getDescription());
+    assertThat(responseTicket.getStatus()).isEqualTo(TodoTicket.TodoTicketStatus.BACKLOG);
+  }
 }
