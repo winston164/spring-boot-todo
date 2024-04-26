@@ -44,6 +44,7 @@ public class TodoTicketDAOImpl implements TodoTicketDAO {
 
   @Override
   public boolean save(TodoTicket ticket){
+    System.out.println(ticket);
     KeyHolder keyHolder = new GeneratedKeyHolder();
     jdbcTemplate.update(
       conn -> {

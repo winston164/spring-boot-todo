@@ -114,4 +114,25 @@ class MainControllerTest {
     assertThat(ticketResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     assertThat(ticketResponse.getBody()).isEqualTo("A title should be less than 255 characters for a Todo entity.");
   }
+
+  @Test
+  void postPayload(){
+    // Prepare 
+    assertThat(restTemplate).isNotNull();
+    String path = "/todos";
+
+    TodoTicket testTicket = new TodoTicket();
+    testTicket.setTitle("title");
+
+    // Test
+    ResponseEntity<TodoTicket> ticketResponse = restTemplate.postForEntity(url() + path, testTicket, TodoTicket.class);
+
+    // Assert
+    assertThat(ticketResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    TodoTicket responseTicket = ticketResponse.getBody();
+    assertThat(responseTicket.getTitle()).isEqualTo(testTicket.getTitle());
+    assertThat(responseTicket.getId()).isEqualTo(1);
+    assertThat(responseTicket.getDescription()).isEqualTo(testTicket.getDescription());
+    assertThat(responseTicket.getStatus()).isEqualTo(TodoTicket.TodoTicketStatus.BACKLOG);
+  }
 }

@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 import com.telus.todoapp.models.TodoTicket;
+import com.telus.todoapp.models.TodoTicket.TodoTicketStatus;
 import com.telus.todoapp.utils.DBUtils;
 
 @SpringBootTest
@@ -37,6 +38,41 @@ class TodoTicketDAOTests {
 
     // Assert
     assertThat(tickets.size()).isZero();
+  }
+
+  @Test
+  void saveOne(){
+    // Prepare 
+    assertThat(ticketDAO).isNotNull();
+    TodoTicket todoTicket = new TodoTicket();
+    todoTicket.setStatus(TodoTicketStatus.BACKLOG);
+    todoTicket.setTitle("title");
+
+    // Test
+    boolean saved = ticketDAO.save(todoTicket);
+
+    // Assert
+    assertThat(saved).isTrue();
+    assertThat(todoTicket.getId()).isEqualTo(1);
+  }
+
+  @Test
+  void persistOne(){
+    // Prepare 
+    assertThat(ticketDAO).isNotNull();
+    TodoTicket ticket = new TodoTicket();
+    ticket.setStatus(TodoTicketStatus.BACKLOG);
+    ticket.setTitle("title");
+    assertThat(ticketDAO.save(ticket)).isTrue();
+
+    // Test
+    TodoTicket responseTicket = ticketDAO.findOne(ticket.getId());
+
+    // Assert
+    assertThat(responseTicket.getTitle()).isEqualTo(ticket.getTitle());
+    assertThat(responseTicket.getId()).isEqualTo(ticket.getId());
+    assertThat(responseTicket.getDescription()).isEqualTo(ticket.getDescription());
+    assertThat(responseTicket.getStatus()).isEqualTo(ticket.getStatus());
   }
 
 }
