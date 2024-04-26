@@ -26,3 +26,10 @@ java -jar target/*.jar
 ```
 
 After installation the server will run in port `8000`.
+
+# Testing
+
+For testing you may use:
+```
+./mvnw test
+```
