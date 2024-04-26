@@ -35,4 +35,8 @@ public class TodoTicketDAOImpl implements TodoTicketDAO {
     return jdbcTemplate.query("SELECT * FROM todo_tickets", new TodoTicketMapper());
   }
 
+  @Override
+  public TodoTicket findOne(int id){
+    return jdbcTemplate.queryForObject("SELECT * FROM todo_tickets WHERE id = ?", new TodoTicketMapper(), id);
+  }
 }

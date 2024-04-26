@@ -8,4 +8,5 @@ public interface TodoTicketService {
 
   public List<TodoTicket> readAll();
 
+  public TodoTicket readOne(int id);
 }

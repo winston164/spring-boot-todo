@@ -19,4 +19,8 @@ public class TodoTicketServiceImpl implements TodoTicketService {
     return ticketDAO.findAll();
   }
 
+  @Override
+  public TodoTicket readOne(int id){
+    return ticketDAO.findOne(id);
+  }
 }

@@ -8,4 +8,6 @@ public interface TodoTicketDAO {
 
   public List<TodoTicket> findAll();
 
+  public TodoTicket findOne(int id);
+
 }
