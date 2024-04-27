@@ -3,6 +3,7 @@ package com.telus.todoapp.controllers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -10,13 +11,20 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import com.telus.todoapp.models.TodoTicket;
 import com.telus.todoapp.utils.DBUtils;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
 class MainControllerTest {
 
   @LocalServerPort
@@ -27,6 +35,9 @@ class MainControllerTest {
 
   @Autowired
   JdbcTemplate jdbcTemplate;
+
+  @Autowired
+  private MockMvc mockMvc;
 
   @BeforeEach
   void beforeAll(){
@@ -162,4 +173,39 @@ class MainControllerTest {
     assertThat(responseTicket.getDescription()).isEqualTo(testTicket.getDescription());
     assertThat(responseTicket.getStatus()).isEqualTo(TodoTicket.TodoTicketStatus.BACKLOG);
   }
+
+  @Test
+  void patchNotExisting() throws Exception{
+    // Prepare 
+    assertThat(restTemplate).isNotNull();
+
+    // Test
+    mockMvc.perform(
+      patch("/todos/1")
+      .contentType(APPLICATION_JSON)
+      .content("{}")
+    )
+    .andDo(print())
+    .andExpect(status().isNotFound());
+
+    // Assert
+  }
+
+  @Test
+  void deleteNotExisting() throws Exception{
+    // Prepare 
+    assertThat(restTemplate).isNotNull();
+
+    // Test
+    mockMvc.perform(
+      delete("/todos/1")
+      .contentType(APPLICATION_JSON)
+      .content("{}")
+    )
+    .andDo(print())
+    .andExpect(status().isNotFound());
+
+    // Assert
+  }
+
 }

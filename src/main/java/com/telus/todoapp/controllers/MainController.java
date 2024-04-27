@@ -52,11 +52,6 @@ public class MainController {
   @PostMapping("/todos")
   @ResponseBody
   public TodoTicket postOne(@RequestBody TodoTicket ticket){
-    boolean canPost = 
-      ticket.getId() == 0 &&
-      ticket.getTitle() != null &&
-      ticket.getTitle().length() < 255
-    ;
     if (ticket.getId() != 0){
       throw new ResponseStatusException(
         HttpStatus.BAD_REQUEST,
@@ -93,7 +88,11 @@ public class MainController {
     @RequestBody TodoTicket ticket
   ){
 
-    // TODO: ensure that the object exists
+    try{
+      ticketService.readOne(ticketId);
+    } catch (EmptyResultDataAccessException emptyResult){
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Todo with id " + ticketId + " couldn't be found.");
+    }
     
     ticketService.update(ticketId, ticket);
 
@@ -105,6 +104,11 @@ public class MainController {
   @DeleteMapping("/todos/{ticketId}")
   @ResponseBody
   public void deleteOne(@PathVariable int ticketId){
+    try{
+      ticketService.readOne(ticketId);
+    } catch (EmptyResultDataAccessException emptyResult){
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Todo with id " + ticketId + " couldn't be found.");
+    }
     ticketService.delete(ticketId);
   }
   
